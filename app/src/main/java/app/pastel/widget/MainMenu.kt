@@ -40,6 +40,9 @@ import kotlinx.coroutines.delay
 private val MENU_ITEM_START_OFFSET = (-6).dp
 private val SOUND_SETTINGS_START_OFFSET = 60.dp
 
+private val SOUND_ON_COLOR = Color(0xFFB5DCCD)
+private val SOUND_OFF_COLOR = Color(0xFFDBB5B5)
+
 private const val SOUND_SETTINGS_DURATION = 1000L
 private const val SOUND_SETTINGS_ANIMATION_DELAY = 200L
 
@@ -151,9 +154,9 @@ private fun SoundSettingsItem(context: Context, soundSettings: SoundSettings, on
                     label = ""
                 )
                 val textColor = if (soundSettings == SoundSettings.ON) {
-                    Color(0xFFDBB5B5)
+                    SOUND_OFF_COLOR
                 } else {
-                    Color(0xFFB5DCCD)
+                    SOUND_ON_COLOR
                 }
                 Text(
                     text = item,
@@ -179,6 +182,6 @@ private fun getSoundSettingsItems(context: Context, state: SoundSettings): List<
 
 @Preview
 @Composable
-fun MainMenuPreview() {
+private fun MainMenuPreview() {
     MainMenu(context = LocalContext.current, state = MainMenuUIState(), onSoundClick = {})
 }
