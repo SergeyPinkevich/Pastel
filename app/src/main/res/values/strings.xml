@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Pastel</string>
+
+    <!--  Main menu  -->
+    <string name="main_menu_play">Play</string>
+    <string name="main_menu_statistics">Stats</string>
+    <string name="main_menu_sound">Sound</string>
+    <string name="main_menu_sound_on">On</string>
+    <string name="main_menu_sound_off">Off</string>
+    <string name="main_menu_about">About</string>
 </resources>
