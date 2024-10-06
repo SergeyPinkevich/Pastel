@@ -47,7 +47,7 @@ private const val SOUND_SETTINGS_DURATION = 1000L
 private const val SOUND_SETTINGS_ANIMATION_DELAY = 200L
 
 @Composable
-fun MainMenu(context: Context, state: MainMenuUIState, onPlayClick: () -> Unit) {
+fun MainMenu(context: Context, state: MainMenuUIState, onPlayClick: () -> Unit, onStatsClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,7 +62,7 @@ fun MainMenu(context: Context, state: MainMenuUIState, onPlayClick: () -> Unit) 
         MenuItem(
             textRes = R.string.main_menu_statistics,
             fontSize = 106.sp,
-            onClick = {},
+            onClick = onStatsClick,
             modifier = Modifier.startOffset(MENU_ITEM_START_OFFSET)
         )
         SoundSettingsItem(
@@ -183,5 +183,5 @@ private fun getSoundSettingsItems(context: Context, state: SoundSettings): List<
 @Preview
 @Composable
 private fun MainMenuPreview() {
-    MainMenu(context = LocalContext.current, state = MainMenuUIState(), onPlayClick = {})
+    MainMenu(context = LocalContext.current, state = MainMenuUIState(), onPlayClick = {}, onStatsClick = {})
 }

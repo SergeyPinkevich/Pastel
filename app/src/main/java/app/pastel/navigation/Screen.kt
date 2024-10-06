@@ -10,4 +10,7 @@ sealed class Screen : java.io.Serializable {
 
     @Serializable
     data object GameScreen : Screen()
+
+    @Serializable
+    data object StatsScreen : Screen()
 }

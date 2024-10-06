@@ -12,6 +12,8 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.pastel.R
+import app.pastel.data.GameRecordDao
+import app.pastel.data.GameRecordSchema
 import app.pastel.state.GameState
 import app.pastel.state.GameUIState
 import app.pastel.state.RoundUIState
@@ -31,8 +33,9 @@ import kotlin.random.Random
 private const val ROUND_RESULT_SHOWING_DURATION_IN_MS = 2000L
 private const val ONE_HUNDRED_PERCENT = 100
 
+@Suppress("TooManyFunctions")
 @HiltViewModel
-class GameViewModel @Inject constructor() : ViewModel() {
+class GameViewModel @Inject constructor(private val local: GameRecordDao) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUIState())
     val uiState: StateFlow<GameUIState> = _uiState
@@ -155,6 +158,7 @@ class GameViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onGameFinishClick() {
+        saveScoreToDatabase()
         _uiState.value = _uiState.value.copy(
             state = GameState.FINISHED,
         )
@@ -208,5 +212,16 @@ class GameViewModel @Inject constructor() : ViewModel() {
                 }
             }
         )
+    }
+
+    private fun saveScoreToDatabase() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val schema = GameRecordSchema(
+                id = 0,
+                score = _uiState.value.totalScore,
+                timestamp = System.currentTimeMillis()
+            )
+            local.insert(schema)
+        }
     }
 }

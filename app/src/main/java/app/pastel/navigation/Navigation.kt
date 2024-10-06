@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import app.pastel.screen.game.GameScreen
 import app.pastel.screen.menu.MainMenuScreen
+import app.pastel.screen.stats.StatsScreen
 import kotlin.reflect.KClass
 
 @Composable
@@ -17,6 +18,9 @@ fun Navigation(context: Context, navController: NavHostController, startDestinat
         }
         composable<Screen.GameScreen> {
             GameScreen(navController = navController)
+        }
+        composable<Screen.StatsScreen> {
+            StatsScreen(navController = navController)
         }
     }
 }

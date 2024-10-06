@@ -15,6 +15,10 @@
     <string name="share_result_button">Share?</string>
     <string name="play_again_button">Play again</string>
 
+    <string name="stats_title">Stats</string>
+    <string name="stats_highest_score">Highest score</string>
+    <string name="stats_games_played">Games played</string>
+
     <!-- Outstanding Scores -->
     <string-array name="outstanding_scores">
         <item>Perfect!</item>
