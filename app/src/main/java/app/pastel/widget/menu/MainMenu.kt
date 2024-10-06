@@ -1,4 +1,4 @@
-package app.pastel.widget
+package app.pastel.widget.menu
 
 import android.content.Context
 import androidx.annotation.StringRes
@@ -47,7 +47,7 @@ private const val SOUND_SETTINGS_DURATION = 1000L
 private const val SOUND_SETTINGS_ANIMATION_DELAY = 200L
 
 @Composable
-fun MainMenu(context: Context, state: MainMenuUIState, onSoundClick: () -> Unit) {
+fun MainMenu(context: Context, state: MainMenuUIState, onPlayClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,7 +56,7 @@ fun MainMenu(context: Context, state: MainMenuUIState, onSoundClick: () -> Unit)
         MenuItem(
             textRes = R.string.main_menu_play,
             fontSize = 106.sp,
-            onClick = {},
+            onClick = onPlayClick,
             modifier = Modifier.startOffset(MENU_ITEM_START_OFFSET)
         )
         MenuItem(
@@ -68,7 +68,7 @@ fun MainMenu(context: Context, state: MainMenuUIState, onSoundClick: () -> Unit)
         SoundSettingsItem(
             context = context,
             soundSettings = state.soundSettings,
-            onClick = onSoundClick
+            onClick = { }
         )
         Spacer(modifier = Modifier.weight(1f))
         MenuItem(
@@ -183,5 +183,5 @@ private fun getSoundSettingsItems(context: Context, state: SoundSettings): List<
 @Preview
 @Composable
 private fun MainMenuPreview() {
-    MainMenu(context = LocalContext.current, state = MainMenuUIState(), onSoundClick = {})
+    MainMenu(context = LocalContext.current, state = MainMenuUIState(), onPlayClick = {})
 }

@@ -8,4 +8,50 @@
     <string name="main_menu_sound_on">On</string>
     <string name="main_menu_sound_off">Off</string>
     <string name="main_menu_about">About</string>
+
+    <string name="round_text">Round</string>
+    <string name="next_round_button">Next</string>
+    <string name="finish_game_button">Finish</string>
+    <string name="share_result_button">Share?</string>
+    <string name="play_again_button">Play again</string>
+
+    <!-- Outstanding Scores -->
+    <string-array name="outstanding_scores">
+        <item>Perfect!</item>
+        <item>Amazing!</item>
+        <item>You\'re on fire!</item>
+        <item>Unstoppable!</item>
+    </string-array>
+
+    <!-- High Scores -->
+    <string-array name="high_scores">
+        <item>Great job!</item>
+        <item>Nicely done!</item>
+        <item>Impressive!</item>
+        <item>Well played!</item>
+    </string-array>
+
+    <!-- Medium Scores -->
+    <string-array name="medium_scores">
+        <item>Almost!</item>
+        <item>Getting there!</item>
+        <item>Not bad!</item>
+        <item>Keep going!</item>
+    </string-array>
+
+    <!-- Low Scores -->
+    <string-array name="low_scores">
+        <item>Could be better</item>
+        <item>Nice try!</item>
+        <item>Not too far</item>
+        <item>Try again!</item>
+    </string-array>
+
+    <!-- Very Low Scores -->
+    <string-array name="very_low_scores">
+        <item>Ouch!</item>
+        <item>Next time!</item>
+        <item>Tough round</item>
+        <item>Don\'t give up!</item>
+    </string-array>
 </resources>
