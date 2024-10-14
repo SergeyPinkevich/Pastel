@@ -2,6 +2,7 @@ package app.pastel.screen.stats
 
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import app.pastel.R
 import app.pastel.navigation.Screen
+import app.pastel.ui.PastelTheme
 import app.pastel.util.firstBaselineHeight
 import app.pastel.util.startOffset
 
@@ -66,7 +68,7 @@ fun StatsScreen(navController: NavController, viewModel: StatsViewModel = hiltVi
         label = "games_played_animation"
     )
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().background(color = PastelTheme.colors.backgroundColor)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
                 text = stringResource(id = R.string.stats_title).uppercase(),
@@ -89,7 +91,8 @@ fun StatsScreen(navController: NavController, viewModel: StatsViewModel = hiltVi
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = PastelTheme.colors.textColor
                 )
             }
         }
@@ -101,7 +104,7 @@ fun StatsScreen(navController: NavController, viewModel: StatsViewModel = hiltVi
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .firstBaselineHeight(24.dp),
-                color = Color.Black
+                color = PastelTheme.colors.textColor
             )
             Text(
                 text = animatedHighestScoreValue.toString(),
@@ -117,7 +120,7 @@ fun StatsScreen(navController: NavController, viewModel: StatsViewModel = hiltVi
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .firstBaselineHeight(24.dp),
-                color = Color.Black
+                color = PastelTheme.colors.textColor
             )
             Text(
                 text = animatedGamesPlayedValue.toString(),
@@ -137,13 +140,13 @@ fun StatsScreen(navController: NavController, viewModel: StatsViewModel = hiltVi
                         text = item.date,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Black,
-                        color = Color.Black
+                        color = PastelTheme.colors.textColor
                     )
                     Text(
                         text = item.score.toString(),
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Black,
-                        color = Color.Black,
+                        color = PastelTheme.colors.textColor,
                         modifier = Modifier.padding(start = 36.dp)
                     )
                 }

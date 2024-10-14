@@ -7,6 +7,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.pastel.state.GameState
+import app.pastel.ui.PastelTheme
 import app.pastel.util.distance
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -79,9 +81,12 @@ fun ColorPalette(
         label = "dash_line_to_target_color_animation"
     )
 
+    val textColor = PastelTheme.colors.textColor
+
     Canvas(
         modifier = modifier
             .fillMaxSize()
+            .background(PastelTheme.colors.backgroundColor)
             .pointerInput(Unit) {
                 detectTapGestures { offset ->
                     if (state == GameState.GUESS) {
@@ -139,7 +144,7 @@ fun ColorPalette(
             drawCircle(color = color, radius = CIRCLE_RADIUS.toPx(), center = colorOffset)
 
             drawLine(
-                color = Color.Black,
+                color = textColor,
                 start = guessColorOffset,
                 end = animatedOffset,
                 strokeWidth = 3f,
@@ -151,7 +156,7 @@ fun ColorPalette(
             drawText(
                 textMeasurer = textMeasurer,
                 text = "+$roundScore",
-                style = TextStyle(color = Color.Black, fontSize = 32.sp, fontWeight = FontWeight.Black),
+                style = TextStyle(color = textColor, fontSize = 32.sp, fontWeight = FontWeight.Black),
                 topLeft = calculateTextOffset(
                     from = guessColorOffset,
                     to = colorOffset,

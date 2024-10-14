@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import app.pastel.navigation.Navigation
 import app.pastel.navigation.Screen
+import app.pastel.ui.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -16,11 +17,13 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            Navigation(
-                context = this,
-                navController = navController,
-                startDestination = Screen.MenuScreen.javaClass.kotlin
-            )
+            AppTheme {
+                Navigation(
+                    context = this,
+                    navController = navController,
+                    startDestination = Screen.MenuScreen.javaClass.kotlin
+                )
+            }
         }
     }
 }

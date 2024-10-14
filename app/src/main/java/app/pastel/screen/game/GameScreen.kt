@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import app.pastel.R
 import app.pastel.navigation.Screen
 import app.pastel.state.GameState
+import app.pastel.ui.PastelTheme
 import app.pastel.widget.game.ColorPalette
 import app.pastel.widget.game.CountdownAnimation
 import app.pastel.widget.game.RoundHistory
@@ -104,7 +105,7 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = hiltView
                     )
                     Text(
                         text = stringArrayResource(id = currentRound.resultRes).random().uppercase(),
-                        style = TextStyle(color = Color.Black, fontSize = 32.sp),
+                        style = TextStyle(color = PastelTheme.colors.textColor, fontSize = 32.sp),
                         fontWeight = FontWeight.Black,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
@@ -112,7 +113,6 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = hiltView
                     )
                 }
             }
-
             GameState.ROUND_FINISHED -> {
                 Box(modifier = Modifier.fillMaxSize()) {
                     ColorPalette(
@@ -154,7 +154,7 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = hiltView
                 }
             }
             GameState.FINISHED -> {
-                Box(modifier = Modifier.fillMaxSize()) {
+                Box(modifier = Modifier.fillMaxSize().background(color = PastelTheme.colors.backgroundColor)) {
                     IconButton(
                         onClick = {
                             navController.navigate(Screen.MenuScreen) {
@@ -170,7 +170,8 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = hiltView
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = PastelTheme.colors.textColor
                         )
                     }
                     Column(
@@ -179,7 +180,7 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = hiltView
                     ) {
                         Text(
                             text = uiState.totalScore.toString(),
-                            style = TextStyle(color = Color.Black, fontSize = 128.sp),
+                            style = TextStyle(PastelTheme.colors.textColor, fontSize = 128.sp),
                             fontWeight = FontWeight.Black
                         )
                         TextButton(

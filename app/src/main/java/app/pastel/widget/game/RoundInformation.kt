@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.pastel.R
 import app.pastel.state.GameState
+import app.pastel.ui.PastelTheme
 
 @Composable
 fun RoundInformation(
@@ -52,11 +53,13 @@ fun RoundInformation(
         Text(
             stringResource(id = R.string.round_text).uppercase() + " $round/$totalRounds",
             fontSize = 20.sp,
+            color = PastelTheme.colors.textColor,
             style = TextStyle(fontWeight = FontWeight.Black)
         )
         Text(
             text = if (state == GameState.ROUND_RESULT) animatedTotalScore.toString() else totalScore.toString(),
             fontSize = 20.sp,
+            color = PastelTheme.colors.textColor,
             style = TextStyle(fontWeight = FontWeight.Black)
         )
     }

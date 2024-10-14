@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import app.pastel.R
 import app.pastel.state.MainMenuUIState
 import app.pastel.state.SoundSettings
+import app.pastel.ui.PastelTheme
 import app.pastel.util.firstBaselineHeight
 import app.pastel.util.startOffset
 import kotlinx.coroutines.delay
@@ -51,7 +52,7 @@ fun MainMenu(context: Context, state: MainMenuUIState, onPlayClick: () -> Unit, 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(PastelTheme.colors.backgroundColor)
     ) {
         MenuItem(
             textRes = R.string.main_menu_play,
@@ -89,7 +90,7 @@ private fun MenuItem(
     val interactionSource = remember { MutableInteractionSource() }
     Text(
         text = stringResource(id = textRes).uppercase(),
-        style = TextStyle(color = Color.Black, fontSize = fontSize),
+        style = TextStyle(color = PastelTheme.colors.textColor, fontSize = fontSize),
         fontWeight = FontWeight.Black,
         maxLines = 1,
         modifier = modifier
