@@ -19,6 +19,11 @@
     <string name="stats_highest_score">Highest score</string>
     <string name="stats_games_played">Games played</string>
 
+    <string name="about_title">About</string>
+    <string name="about_disclaimer">This Android app is an adaptation of an existing iOS app</string>
+    <string name="about_link">Website link</string>
+    <string name="version_text">Version</string>
+
     <!-- Outstanding Scores -->
     <string-array name="outstanding_scores">
         <item>Perfect!</item>

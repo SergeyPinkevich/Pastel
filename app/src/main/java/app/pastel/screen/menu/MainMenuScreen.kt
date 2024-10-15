@@ -13,6 +13,7 @@ fun MainMenuScreen(context: Context, navController: NavController) {
         context = context,
         state = MainMenuUIState(),
         onPlayClick = { navController.navigate(Screen.GameScreen) },
-        onStatsClick = { navController.navigate(Screen.StatsScreen) }
+        onStatsClick = { navController.navigate(Screen.StatsScreen) },
+        onAboutClick = { navController.navigate(Screen.AboutScreen) },
     )
 }

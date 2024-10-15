@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import app.pastel.screen.about.AboutScreen
 import app.pastel.screen.game.GameScreen
 import app.pastel.screen.menu.MainMenuScreen
 import app.pastel.screen.stats.StatsScreen
@@ -21,6 +22,9 @@ fun Navigation(context: Context, navController: NavHostController, startDestinat
         }
         composable<Screen.StatsScreen> {
             StatsScreen(navController = navController)
+        }
+        composable<Screen.AboutScreen> {
+            AboutScreen(navController = navController)
         }
     }
 }
