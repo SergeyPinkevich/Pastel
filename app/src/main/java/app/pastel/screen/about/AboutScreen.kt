@@ -33,9 +33,8 @@ import app.pastel.widget.about.LinkItem
 private val ABOUT_TITLE_COLOR = Color(0xFF4ABD7E)
 
 private const val ABOUT_LINK = "https://work.antonandirene.com/colormatch/2/"
-// TODO replace with Web links
-private const val PRIVACY_POLICY_LINK = "privacy_policy.html"
-private const val TERMS_OF_SERVICE_LINK = "terms_of_service.html"
+private const val PRIVACY_POLICY_LINK = "https://html-preview.github.io/?url=https://raw.githubusercontent.com/SergeyPinkevich/Pastel/refs/heads/main/app/src/main/assets/privacy_policy.html"
+private const val TERMS_OF_SERVICE_LINK = "https://html-preview.github.io/?url=https://raw.githubusercontent.com/SergeyPinkevich/Pastel/refs/heads/main/app/src/main/assets/terms_of_service.html"
 
 @Composable
 fun AboutScreen(navController: NavController) {
