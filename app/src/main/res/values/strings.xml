@@ -26,6 +26,9 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_of_service">Terms of Service</string>
 
+    <string name="tutorial_guess">Tap and move your finger to find the color</string>
+    <string name="tutorial_confirm">Tap the circle to confirm</string>
+
     <!-- Outstanding Scores -->
     <string-array name="outstanding_scores">
         <item>Perfect!</item>

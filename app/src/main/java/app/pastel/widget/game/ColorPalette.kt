@@ -10,26 +10,38 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.pastel.R
 import app.pastel.state.GameState
 import app.pastel.ui.PastelTheme
 import app.pastel.util.distance
+import app.pastel.widget.tutorial.GuessAnimation
+import kotlinx.coroutines.delay
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -38,6 +50,7 @@ private val BIG_CIRCLE_RADIUS = 48.dp
 
 private const val GUESS_SIZE_ANIMATION_IN_MS = 400
 private const val DASH_LINE_ANIMATION_IN_MS = 900
+private const val CONFIRM_ANIMATION_IN_MS = 1000
 
 private const val DASH_LINE_STROKE_LENGTH_IN_PX = 15f
 private const val DASH_LINE_SPACE_LENGTH_IN_PX = 10f
@@ -45,7 +58,7 @@ private const val DASH_LINE_SPACE_LENGTH_IN_PX = 10f
 private const val HORIZONTAL_BUFFER_FOR_TEXT_IN_PX = 180f
 private const val VERTICAL_BUFFER_FOR_TEXT_IN_PX = 100f
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 fun ColorPalette(
     gameState: GameState,
@@ -57,7 +70,9 @@ fun ColorPalette(
     guessColorOffset: Offset,
     onColorGuess: (Color, Offset) -> Unit,
     onColorConfirm: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showTutorial: Boolean = false,
+    onTouch: () -> Unit = {}
 ) {
     var guessOffset by remember { mutableStateOf(guessColorOffset) }
     val state by remember { mutableStateOf(gameState) }
@@ -89,6 +104,7 @@ fun ColorPalette(
             .background(PastelTheme.colors.backgroundColor)
             .pointerInput(Unit) {
                 detectTapGestures { offset ->
+                    onTouch.invoke()
                     if (state == GameState.GUESS) {
                         val tapToConfirm = isTapToConfirm(
                             currentTouch = offset,
@@ -120,6 +136,7 @@ fun ColorPalette(
                         guessRadius = CIRCLE_RADIUS
                     },
                     onDrag = { change, _ ->
+                        onTouch.invoke()
                         if (state == GameState.GUESS) {
                             guessOffset = change.position
                             guessRadius = BIG_CIRCLE_RADIUS
@@ -137,7 +154,11 @@ fun ColorPalette(
                 )
             }
     ) {
-        drawCircle(color = guessColor, radius = animatedGuessRadius.toPx(), center = guessColorOffset)
+        drawCircle(
+            color = guessColor,
+            radius = animatedGuessRadius.toPx(),
+            center = guessColorOffset
+        )
         if (state == GameState.ROUND_RESULT || state == GameState.ROUND_FINISHED) {
             targetOffset = colorOffset
 
@@ -156,7 +177,11 @@ fun ColorPalette(
             drawText(
                 textMeasurer = textMeasurer,
                 text = "+$roundScore",
-                style = TextStyle(color = textColor, fontSize = 32.sp, fontWeight = FontWeight.Black),
+                style = TextStyle(
+                    color = textColor,
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Black
+                ),
                 topLeft = calculateTextOffset(
                     from = guessColorOffset,
                     to = colorOffset,
@@ -165,6 +190,65 @@ fun ColorPalette(
                     screenHeight = paletteBitmap.height
                 )
             )
+        }
+    }
+
+    if (showTutorial) {
+        if (guessColor == Color.Unspecified) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.tutorial_guess).uppercase(),
+                    style = TextStyle(
+                        color = textColor,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .width(300.dp)
+                        .align(Alignment.Center)
+                )
+                GuessAnimation(
+                    bitmap = paletteBitmap,
+                    circleRadiusInPx = with(LocalDensity.current) { CIRCLE_RADIUS.toPx() },
+                )
+            }
+        } else if (state == GameState.GUESS) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.tutorial_confirm).uppercase(),
+                    style = TextStyle(
+                        color = textColor,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .width(180.dp)
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(showTutorial) {
+        while (true) {
+            if (showTutorial && state == GameState.GUESS && guessColor != Color.Unspecified) {
+                guessRadius = CIRCLE_RADIUS
+                delay(CONFIRM_ANIMATION_IN_MS.toLong())
+                guessRadius = CIRCLE_RADIUS + 16.dp
+                delay(CONFIRM_ANIMATION_IN_MS.toLong())
+            } else {
+                break
+            }
         }
     }
 }
