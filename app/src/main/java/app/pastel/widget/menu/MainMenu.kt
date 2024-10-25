@@ -51,6 +51,7 @@ private const val SOUND_SETTINGS_ANIMATION_DELAY = 200L
 fun MainMenu(
     context: Context,
     state: MainMenuUIState,
+    onSoundClick: () -> Unit,
     onPlayClick: () -> Unit,
     onStatsClick: () -> Unit,
     onAboutClick: () -> Unit
@@ -75,7 +76,7 @@ fun MainMenu(
         SoundSettingsItem(
             context = context,
             soundSettings = state.soundSettings,
-            onClick = { }
+            onClick = onSoundClick
         )
         Spacer(modifier = Modifier.weight(1f))
         MenuItem(
@@ -193,6 +194,7 @@ private fun MainMenuPreview() {
     MainMenu(
         context = LocalContext.current,
         state = MainMenuUIState(),
+        onSoundClick = {},
         onPlayClick = {},
         onStatsClick = {},
         onAboutClick = {}
