@@ -13,6 +13,8 @@
     <string name="next_round_button">Next</string>
     <string name="finish_game_button">Finish</string>
     <string name="share_result_button">Share?</string>
+    <string name="share_result_title">I just scored</string>
+    <string name="share_result_subtitle">Pastel game</string>
     <string name="play_again_button">Play again</string>
 
     <string name="stats_title">Stats</string>
