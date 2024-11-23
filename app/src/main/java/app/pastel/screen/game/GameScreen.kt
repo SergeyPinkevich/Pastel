@@ -31,11 +31,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -58,11 +56,13 @@ import kotlin.math.sin
 
 const val COLOR_ANIMATION_DURATION_IN_MS = 1500
 private const val TUTORIAL_DELAY_IN_MS = 4000L
-private const val SHARE_COLOR_RADIUS = 16f
-private const val SHARE_COLOR_SHIFT = (360f / 20f).toDouble()
-private const val SHARE_TEXT_VERTICAL_OFFSET_IN_PX = 45
-private const val SHARE_SCREEN_RADIUS = 150f
-private const val SHARE_SCREENSHOT_WIDTH_IN_PX = 360f
+private const val SHARE_COLOR_RADIUS = 32f
+private const val SHARE_COLOR_SHIFT = (720f / 20f).toDouble()
+private const val SHARE_TEXT_VERTICAL_OFFSET_IN_PX = 90
+private const val SHARE_TEXT_TITLE_SIZE_IN_PX = 52f
+private const val SHARE_TEXT_SCORE_SIZE_IN_PX = 210f
+private const val SHARE_SCREEN_RADIUS = 300f
+private const val SHARE_SCREENSHOT_WIDTH_IN_PX = 720f
 
 @Composable
 fun GameScreen(navController: NavController, viewModel: GameViewModel = hiltViewModel()) {
@@ -227,7 +227,6 @@ private fun GameFinishedScreen(
     navController: NavController
 ) {
     val context = LocalContext.current
-    val density = LocalDensity.current
     Box(modifier = Modifier
         .fillMaxSize()
         .background(color = PastelTheme.colors.backgroundColor)) {
@@ -261,7 +260,7 @@ private fun GameFinishedScreen(
             )
             TextButton(
                 textRes = R.string.share_result_button,
-                onClick = { shareResult(context, density, uiState.rounds, uiState.totalScore) }
+                onClick = { shareResult(context, uiState.rounds, uiState.totalScore) }
             )
             RoundHistory(rounds = uiState.rounds, modifier = Modifier.weight(1f))
             TextButton(
@@ -287,17 +286,17 @@ private fun ColorToRemember(color: Color) {
     )
 }
 
-private fun shareResult(context: Context, density: Density, rounds: List<RoundUIState>, totalScore: Int) {
+private fun shareResult(context: Context, rounds: List<RoundUIState>, totalScore: Int) {
     val colors = rounds.flatMap { round -> listOf(round.guessColor, round.color) }
     val guessColors = colors.filterIndexed { index, _ -> index % 2 == 0 }
     val actualColors = colors.filterIndexed { index, _ -> index % 2 == 1 }
     val colorsToDraw = guessColors + actualColors
-    val scoreBitmap = drawToBitmap(context, density, colorsToDraw, totalScore)
+    val scoreBitmap = drawToBitmap(context, colorsToDraw, totalScore)
     shareScreenshot(context, scoreBitmap)
 }
 
 @Suppress("MagicNumber")
-private fun drawToBitmap(context: Context, density: Density, roundColors: List<Color>, totalScore: Int): Bitmap {
+private fun drawToBitmap(context: Context, roundColors: List<Color>, totalScore: Int): Bitmap {
     val bitmap = Bitmap.createBitmap(
         SHARE_SCREENSHOT_WIDTH_IN_PX.toInt(),
         SHARE_SCREENSHOT_WIDTH_IN_PX.toInt(),
@@ -324,8 +323,6 @@ private fun drawToBitmap(context: Context, density: Density, roundColors: List<C
     }
 
     // Draw text with game score
-    val titleTextSize = with(density) { 10.sp.toPx() }
-    val scoreTextSize = with(density) { 40.sp.toPx() }
     val textPaint = Paint().apply {
         color = android.graphics.Color.BLACK
         typeface = Typeface.DEFAULT_BOLD
@@ -335,20 +332,20 @@ private fun drawToBitmap(context: Context, density: Density, roundColors: List<C
     canvas.drawText(
         context.getString(R.string.share_result_title).uppercase(),
         SHARE_SCREENSHOT_WIDTH_IN_PX / 2,
-        SHARE_SCREENSHOT_WIDTH_IN_PX / 2 - SHARE_TEXT_VERTICAL_OFFSET_IN_PX - 10,
-        textPaint.apply { textSize = titleTextSize }
+        SHARE_SCREENSHOT_WIDTH_IN_PX / 2 - SHARE_TEXT_VERTICAL_OFFSET_IN_PX - 20,
+        textPaint.apply { textSize = SHARE_TEXT_TITLE_SIZE_IN_PX }
     )
     canvas.drawText(
         totalScore.toString(),
         SHARE_SCREENSHOT_WIDTH_IN_PX / 2,
-        SHARE_SCREENSHOT_WIDTH_IN_PX / 2 + 35,
-        textPaint.apply { textSize = scoreTextSize }
+        SHARE_SCREENSHOT_WIDTH_IN_PX / 2 + 70,
+        textPaint.apply { textSize = SHARE_TEXT_SCORE_SIZE_IN_PX }
     )
     canvas.drawText(
         context.getString(R.string.share_result_subtitle).uppercase(),
         SHARE_SCREENSHOT_WIDTH_IN_PX / 2,
-        SHARE_SCREENSHOT_WIDTH_IN_PX / 2 + SHARE_TEXT_VERTICAL_OFFSET_IN_PX + 25,
-        textPaint.apply { textSize = titleTextSize }
+        SHARE_SCREENSHOT_WIDTH_IN_PX / 2 + SHARE_TEXT_VERTICAL_OFFSET_IN_PX + 50,
+        textPaint.apply { textSize = SHARE_TEXT_TITLE_SIZE_IN_PX }
     )
 
     return bitmap
