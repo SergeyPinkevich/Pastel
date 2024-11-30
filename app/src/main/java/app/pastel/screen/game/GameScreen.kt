@@ -59,7 +59,7 @@ import kotlin.math.sin
 const val COLOR_ANIMATION_DURATION_IN_MS = 1500
 private const val TUTORIAL_DELAY_IN_MS = 4000L
 private const val SHARE_COLOR_RADIUS = 32f
-private const val SHARE_COLOR_SHIFT = (720f / 20f).toDouble()
+private const val SHARE_COLOR_SHIFT = (360f / 20f).toDouble()
 private const val SHARE_TEXT_VERTICAL_OFFSET_IN_PX = 90
 private const val SHARE_TEXT_TITLE_SIZE_IN_PX = 52f
 private const val SHARE_TEXT_SCORE_SIZE_IN_PX = 210f
