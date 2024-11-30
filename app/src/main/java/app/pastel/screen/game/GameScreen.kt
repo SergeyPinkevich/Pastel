@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -114,9 +116,12 @@ private fun GuessScreen(
     viewModel: GameViewModel
 ) {
     var showTutorial by remember { mutableStateOf(false) }
-    LaunchedEffect(showTutorial) {
-        if (!showTutorial) {
-            delay(TUTORIAL_DELAY_IN_MS)
+    var lastInteractionTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
+
+    LaunchedEffect(lastInteractionTime) {
+        showTutorial = false
+        delay(TUTORIAL_DELAY_IN_MS)
+        if (System.currentTimeMillis() - lastInteractionTime > TUTORIAL_DELAY_IN_MS) {
             showTutorial = true
         }
     }
@@ -132,7 +137,7 @@ private fun GuessScreen(
             onColorGuess = viewModel::onColorGuess,
             onColorConfirm = viewModel::onColorConfirm,
             showTutorial = showTutorial,
-            onTouch = { showTutorial = false }
+            onTouch = { lastInteractionTime = System.currentTimeMillis() }
         )
     }
 }
