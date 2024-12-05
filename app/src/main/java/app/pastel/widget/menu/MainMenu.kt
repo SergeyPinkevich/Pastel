@@ -1,6 +1,7 @@
 package app.pastel.widget.menu
 
 import android.content.Context
+import android.media.MediaPlayer
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -31,10 +33,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.pastel.R
-import app.pastel.state.MainMenuUIState
 import app.pastel.state.SoundSettings
 import app.pastel.ui.PastelTheme
+import app.pastel.util.Sound
 import app.pastel.util.firstBaselineHeight
+import app.pastel.util.playSound
 import app.pastel.util.startOffset
 import kotlinx.coroutines.delay
 
@@ -50,12 +53,13 @@ private const val SOUND_SETTINGS_ANIMATION_DELAY = 200L
 @Composable
 fun MainMenu(
     context: Context,
-    state: MainMenuUIState,
+    soundState: SoundSettings,
     onSoundClick: () -> Unit,
     onPlayClick: () -> Unit,
     onStatsClick: () -> Unit,
     onAboutClick: () -> Unit
 ) {
+    val mediaPlayer = remember { MediaPlayer.create(context, Sound.CLICK.resId) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,26 +68,43 @@ fun MainMenu(
         MenuItem(
             textRes = R.string.main_menu_play,
             fontSize = 106.sp,
-            onClick = onPlayClick,
+            onClick = {
+                onPlayClick.invoke()
+                mediaPlayer.playSound(soundState)
+            },
             modifier = Modifier.startOffset(MENU_ITEM_START_OFFSET)
         )
         MenuItem(
             textRes = R.string.main_menu_statistics,
             fontSize = 106.sp,
-            onClick = onStatsClick,
+            onClick = {
+                onStatsClick.invoke()
+                mediaPlayer.playSound(soundState)
+            },
             modifier = Modifier.startOffset(MENU_ITEM_START_OFFSET)
         )
         SoundSettingsItem(
             context = context,
-            soundSettings = state.soundSettings,
-            onClick = onSoundClick
+            soundSettings = soundState,
+            onClick = {
+                onSoundClick.invoke()
+                mediaPlayer.playSound(soundState)
+            }
         )
         Spacer(modifier = Modifier.weight(1f))
         MenuItem(
             textRes = R.string.main_menu_about,
             fontSize = 36.sp,
-            onClick = onAboutClick
+            onClick = {
+                onAboutClick.invoke()
+                mediaPlayer.playSound(soundState)
+            }
         )
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer.release()
+        }
     }
 }
 
@@ -162,9 +183,9 @@ private fun SoundSettingsItem(context: Context, soundSettings: SoundSettings, on
                     label = ""
                 )
                 val textColor = if (soundSettings == SoundSettings.ON) {
-                    SOUND_OFF_COLOR
-                } else {
                     SOUND_ON_COLOR
+                } else {
+                    SOUND_OFF_COLOR
                 }
                 Text(
                     text = item,
@@ -181,9 +202,9 @@ private fun SoundSettingsItem(context: Context, soundSettings: SoundSettings, on
 
 private fun getSoundSettingsItems(context: Context, state: SoundSettings): List<String> {
     val stringRes = if (state == SoundSettings.ON) {
-        R.string.main_menu_sound_on
-    } else {
         R.string.main_menu_sound_off
+    } else {
+        R.string.main_menu_sound_on
     }
     return context.resources.getString(stringRes).map { it.uppercase() }
 }
@@ -193,7 +214,7 @@ private fun getSoundSettingsItems(context: Context, state: SoundSettings): List<
 private fun MainMenuPreview() {
     MainMenu(
         context = LocalContext.current,
-        state = MainMenuUIState(),
+        soundState = SoundSettings.ON,
         onSoundClick = {},
         onPlayClick = {},
         onStatsClick = {},

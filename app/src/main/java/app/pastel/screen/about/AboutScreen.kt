@@ -1,5 +1,7 @@
 package app.pastel.screen.about
 
+import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +17,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -26,8 +30,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import app.pastel.R
 import app.pastel.navigation.Screen
+import app.pastel.state.SoundSettings
 import app.pastel.ui.PastelTheme
+import app.pastel.util.Sound
 import app.pastel.util.firstBaselineHeight
+import app.pastel.util.playSound
 import app.pastel.widget.about.LinkItem
 
 private val ABOUT_TITLE_COLOR = Color(0xFF4ABD7E)
@@ -39,7 +46,12 @@ private const val PRIVACY_POLICY_LINK = "https://html-preview.github.io/?url=htt
 private const val TERMS_OF_SERVICE_LINK = "https://html-preview.github.io/?url=https://raw.githubusercontent.com/SergeyPinkevich/Pastel/refs/heads/main/app/src/main/assets/terms_of_service.html"
 
 @Composable
-fun AboutScreen(navController: NavController) {
+fun AboutScreen(
+    context: Context,
+    navController: NavController,
+    soundSettings: SoundSettings
+) {
+    val mediaPlayer = remember { MediaPlayer.create(context, Sound.CLICK.resId) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,17 +76,28 @@ fun AboutScreen(navController: NavController) {
                     .firstBaselineHeight(24.dp),
                 color = PastelTheme.colors.textColor
             )
-            LinkItem(resId = R.string.about_link, url = ABOUT_LINK)
+            LinkItem(
+                resId = R.string.about_link,
+                url = ABOUT_LINK,
+                onClick = { mediaPlayer.playSound(soundSettings) }
+            )
             Spacer(modifier = Modifier.weight(1f))
             LinkItem(
                 resId = R.string.privacy_policy,
                 url = PRIVACY_POLICY_LINK,
+                onClick = { mediaPlayer.playSound(soundSettings) }
             )
             LinkItem(
                 resId = R.string.terms_of_service,
                 url = TERMS_OF_SERVICE_LINK,
+                onClick = { mediaPlayer.playSound(soundSettings) },
                 modifier = Modifier.padding(bottom = 32.dp)
             )
+        }
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer.release()
         }
     }
 }
@@ -105,5 +128,9 @@ private fun CloseButton(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 private fun AboutScreenPreview() {
-    AboutScreen(navController = NavController(LocalContext.current))
+    AboutScreen(
+        context = LocalContext.current,
+        navController = NavController(LocalContext.current),
+        soundSettings = SoundSettings.ON
+    )
 }

@@ -20,7 +20,7 @@ import app.pastel.util.firstBaselineHeight
 private val LINK_COLOR = Color(0xFF3083F0)
 
 @Composable
-fun LinkItem(@StringRes resId: Int, url: String, modifier: Modifier = Modifier) {
+fun LinkItem(@StringRes resId: Int, url: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
     Text(
@@ -33,6 +33,7 @@ fun LinkItem(@StringRes resId: Int, url: String, modifier: Modifier = Modifier) 
                 interactionSource = interactionSource,
                 indication = null
             ) {
+                onClick.invoke()
                 val intent = Intent(Intent.ACTION_VIEW).apply {
                     data = Uri.parse(url)
                 }

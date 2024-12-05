@@ -52,7 +52,10 @@ private val GAMES_PLAYED_COLOR = Color(0xFFD4CC69)
 
 @Suppress("LongMethod")
 @Composable
-fun StatsScreen(navController: NavController, viewModel: StatsViewModel = hiltViewModel()) {
+fun StatsScreen(
+    navController: NavController,
+    viewModel: StatsViewModel = hiltViewModel()
+) {
     val uiState by viewModel.state.collectAsState()
 
     var highestScoreValue by remember { mutableStateOf(0) }
@@ -68,7 +71,9 @@ fun StatsScreen(navController: NavController, viewModel: StatsViewModel = hiltVi
         label = "games_played_animation"
     )
 
-    Column(modifier = Modifier.fillMaxSize().background(color = PastelTheme.colors.backgroundColor)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(color = PastelTheme.colors.backgroundColor)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
                 text = stringResource(id = R.string.stats_title).uppercase(),

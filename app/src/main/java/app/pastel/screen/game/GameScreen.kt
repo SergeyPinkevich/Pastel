@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
-import android.util.Log
+import android.media.MediaPlayer
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,7 +46,10 @@ import app.pastel.navigation.Screen
 import app.pastel.state.GameState
 import app.pastel.state.GameUIState
 import app.pastel.state.RoundUIState
+import app.pastel.state.SoundSettings
 import app.pastel.ui.PastelTheme
+import app.pastel.util.Sound
+import app.pastel.util.playSound
 import app.pastel.util.shareScreenshot
 import app.pastel.widget.game.ColorPalette
 import app.pastel.widget.game.CountdownAnimation
@@ -66,10 +70,17 @@ private const val SHARE_TEXT_SCORE_SIZE_IN_PX = 210f
 private const val SHARE_SCREEN_RADIUS = 300f
 private const val SHARE_SCREENSHOT_WIDTH_IN_PX = 720f
 
+@Suppress("MaxLineLength")
 @Composable
-fun GameScreen(navController: NavController, viewModel: GameViewModel = hiltViewModel()) {
+fun GameScreen(
+    context: Context,
+    navController: NavController,
+    soundSettings: SoundSettings,
+    viewModel: GameViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
     val currentRound = uiState.rounds[uiState.round - 1]
+    val mediaPlayer = remember { MediaPlayer.create(context, Sound.CLICK.resId) }
 
     Column(
         modifier = Modifier
@@ -82,9 +93,15 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = hiltView
             GameState.REMEMBER -> RememberScreen(uiState, currentRound, viewModel)
             GameState.GUESS -> GuessScreen(uiState, currentRound, viewModel)
             GameState.ROUND_RESULT -> RoundResultScreen(uiState, currentRound, viewModel)
-            GameState.ROUND_FINISHED -> RoundFinishedScreen(uiState, currentRound, viewModel)
-            GameState.FINISHED -> GameFinishedScreen(uiState, viewModel, navController)
+            GameState.ROUND_FINISHED -> RoundFinishedScreen(uiState, currentRound, viewModel, mediaPlayer, soundSettings)
+            GameState.FINISHED -> GameFinishedScreen(uiState, viewModel, navController, mediaPlayer, soundSettings)
             else -> {}
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer.release()
         }
     }
 }
@@ -183,7 +200,9 @@ private fun RoundResultScreen(
 private fun RoundFinishedScreen(
     uiState: GameUIState,
     currentRound: RoundUIState,
-    viewModel: GameViewModel
+    viewModel: GameViewModel,
+    mediaPlayer: MediaPlayer,
+    soundSettings: SoundSettings
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         ColorPalette(
@@ -208,7 +227,10 @@ private fun RoundFinishedScreen(
         if (uiState.round == uiState.totalRounds) {
             TextButton(
                 textRes = R.string.finish_game_button,
-                onClick = viewModel::onGameFinishClick,
+                onClick = {
+                    mediaPlayer.playSound(soundSettings)
+                    viewModel.onGameFinishClick()
+                },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 36.dp)
@@ -216,7 +238,10 @@ private fun RoundFinishedScreen(
         } else {
             TextButton(
                 textRes = R.string.next_round_button,
-                onClick = viewModel::onNextRoundClick,
+                onClick = {
+                    mediaPlayer.playSound(soundSettings)
+                    viewModel.onNextRoundClick()
+                },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 36.dp)
@@ -229,7 +254,9 @@ private fun RoundFinishedScreen(
 private fun GameFinishedScreen(
     uiState: GameUIState,
     viewModel: GameViewModel,
-    navController: NavController
+    navController: NavController,
+    mediaPlayer: MediaPlayer,
+    soundSettings: SoundSettings
 ) {
     val context = LocalContext.current
     Box(modifier = Modifier
@@ -265,12 +292,18 @@ private fun GameFinishedScreen(
             )
             TextButton(
                 textRes = R.string.share_result_button,
-                onClick = { shareResult(context, uiState.rounds, uiState.totalScore) }
+                onClick = {
+                    mediaPlayer.playSound(soundSettings)
+                    shareResult(context, uiState.rounds, uiState.totalScore)
+                }
             )
             RoundHistory(rounds = uiState.rounds, modifier = Modifier.weight(1f))
             TextButton(
                 textRes = R.string.play_again_button,
-                onClick = viewModel::onStartGame,
+                onClick = {
+                    mediaPlayer.playSound(soundSettings)
+                    viewModel.onStartGame()
+                },
                 modifier = Modifier.padding(bottom = 60.dp)
             )
         }
